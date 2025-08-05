@@ -81,7 +81,7 @@ def send_email(content, topic):
         # Create message
         msg = MIMEMultipart()
         msg['From'] = sender_email
-        msg['To'] = sender_email  # Sending to yourself
+        msg['To'] = sender_email,"lh3312160@gmail.com"  # Sending to yourself
         msg['Subject'] = f"🎬 YouTube Shorts Content: {topic}"
         
         # Email body
