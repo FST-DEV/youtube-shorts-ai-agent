@@ -54,7 +54,8 @@ Always keep the **script length appropriate for a 2–3 minute video** when read
                     "content": prompt,
                 }
             ],
-            model="llama-3.1-70b-versatile",  # You can also use "mixtral-8x7b-32768" or other models
+            # model="llama-3.1-70b-versatile",  # You can also use "mixtral-8x7b-32768" or other models
+            model="mixtral-8x7b-32768",  # You can also use "mixtral-8x7b-32768" or other models
             temperature=0.7,
             max_tokens=2000,
         )
