@@ -75,6 +75,7 @@ def send_email(content, topic):
         sender_email = os.getenv('GMAIL_EMAIL')
         sender_password = os.getenv('GMAIL_APP_PASSWORD')
         to_email = "devfst1234@gmail.com,lh3312160@gmail.com"
+        recipient_list = [email.strip() for email in to_email.split(",")]
         
         if not all([sender_email, sender_password]):
             raise ValueError("Gmail credentials not found in environment variables")
@@ -109,7 +110,8 @@ def send_email(content, topic):
         server.starttls()
         server.login(sender_email, sender_password)
         text = msg.as_string()
-        server.sendmail(sender_email, sender_email, text)
+        # server.sendmail(sender_email, sender_email, text)
+        server.sendmail(sender_email, recipient_list, text)
         server.quit()
         
         print(f"✅ Email sent successfully for topic: {topic}")
