@@ -74,7 +74,7 @@ def send_email(content, topic):
         smtp_port = 587
         sender_email = os.getenv('GMAIL_EMAIL')
         sender_password = os.getenv('GMAIL_APP_PASSWORD')
-        to_email = "devfst1234@gmail.com;lh3312160@gmail.com"
+        to_email = "devfst1234@gmail.com,lh3312160@gmail.com"
         
         if not all([sender_email, sender_password]):
             raise ValueError("Gmail credentials not found in environment variables")
