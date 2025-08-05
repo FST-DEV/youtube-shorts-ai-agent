@@ -207,40 +207,57 @@
             // Disable button and show processing
             submitBtn.disabled = true;
             submitBtn.textContent = '⏳ Processing...';
-            showStatus('🤖 AI is generating your content... This may take 2-3 minutes.', 'processing');
+            showStatus('🚀 Redirecting to GitHub to trigger the workflow...', 'processing');
             
-            try {
-                // GitHub Actions workflow dispatch
-                const response = await fetch('https://api.github.com/repos/FST-DEV/youtube-shorts-ai-agent/actions/workflows/generate-content.yml/dispatches', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        ref: 'main',
-                        inputs: {
-                            topic: topic
-                        }
-                    })
-                });
-                
-                if (response.ok) {
-                    showStatus('✅ Request submitted! Check your email in 2-3 minutes for the generated content.', 'success');
-                    document.getElementById('topic').value = '';
-                } else {
-                    throw new Error('Failed to trigger workflow');
-                }
-                
-            } catch (error) {
-                console.error('Error:', error);
-                showStatus('❌ Something went wrong. Please try again or check your setup.', 'error');
-            } finally {
-                // Re-enable button
-                submitBtn.disabled = false;
-                submitBtn.textContent = '🚀 Generate Content';
-            }
+            // Create the GitHub Actions workflow dispatch URL
+            const username = 'FST-DEV'; // Replace with your GitHub username
+            const repoName = 'youtube-shorts-ai-agent'; // Replace with your repository name
+            const workflowUrl = `https://github.com/${username}/${repoName}/actions/workflows/generate-content.yml`;
+            
+            // Store the topic in localStorage for the instructions
+            localStorage.setItem('aiAgentTopic', topic);
+            
+            // Show instructions
+            showInstructions(workflowUrl, topic);
+            
+            // Re-enable button
+            submitBtn.disabled = false;
+            submitBtn.textContent = '🚀 Generate Content';
         });
+        
+        function showInstructions(workflowUrl, topic) {
+            const status = document.getElementById('status');
+            status.innerHTML = `
+                <div style="text-align: left; line-height: 1.6;">
+                    <h3 style="margin-bottom: 15px; color: #333;">📋 Follow these steps:</h3>
+                    <ol style="margin-left: 20px;">
+                        <li style="margin-bottom: 10px;">
+                            <strong>Click this link:</strong> 
+                            <a href="${workflowUrl}" target="_blank" style="color: #667eea; text-decoration: none; font-weight: bold;">
+                                Open GitHub Workflow →
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Click "Run workflow" button</strong> (top right, green button)
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Enter your topic:</strong> <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">${topic}</code>
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Click "Run workflow"</strong> to start generation
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <strong>Check your email</strong> in 2-3 minutes for results! 📧
+                        </li>
+                    </ol>
+                    <p style="margin-top: 15px; font-size: 14px; color: #666;">
+                        💡 <em>This manual step is required due to GitHub API security restrictions.</em>
+                    </p>
+                </div>
+            `;
+            status.className = 'status processing';
+            status.style.display = 'block';
+        }
         
         function showStatus(message, type) {
             const status = document.getElementById('status');
